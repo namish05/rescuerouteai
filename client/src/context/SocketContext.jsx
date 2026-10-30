@@ -12,8 +12,12 @@ export const SocketProvider = ({ children }) => {
   const [lastNotification, setLastNotification] = useState(null);
 
   useEffect(() => {
-    // In dev, connects to proxy or window origin
-    const socketInstance = io(window.location.origin, {
+    // Connect to configured backend URL or current window origin
+    const backendUrl = import.meta.env.VITE_BACKEND_URL 
+      ? import.meta.env.VITE_BACKEND_URL.replace(/\/$/, '') 
+      : window.location.origin;
+
+    const socketInstance = io(backendUrl, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 10,
       reconnectionDelay: 1000
